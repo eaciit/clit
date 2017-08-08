@@ -63,7 +63,7 @@ func Start() error {
 		}
 	}
 
-	if preFn == nil {
+	if preFn != nil {
 		preFn()
 	}
 

@@ -108,6 +108,9 @@ func ReadConfig(name, path string) error {
 	if err := config.SetConfigFile(path); err != nil {
 		return err
 	}
+
+	configs[name] = config
+	configpaths[name] = path
 	return nil
 }
 

@@ -151,7 +151,9 @@ func WriteConfig(name string) error {
 }
 
 func initConfigs() {
-	configs = map[string]*appconfig.Config{}
+	if configs == nil {
+		configs = map[string]*appconfig.Config{}
+	}
 }
 
 func Close() {

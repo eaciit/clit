@@ -20,8 +20,10 @@ var (
 	closeFn func() error
 	flags   = map[string]*string{}
 
-	configs map[string]*appconfig.Config
-	exeDir  string
+	configs     map[string]*appconfig.Config
+	configpaths = map[string]string{}
+
+	exeDir string
 )
 
 func init() {
@@ -52,8 +54,10 @@ func Start() error {
 	flag.Parse()
 
 	if EnableConfig {
-		if err = ReadConfig("", ""); err != nil {
-			return fmt.Errorf("error reading config file. %s", err.Error())
+		for n, f := range configpaths {
+			if err = ReadConfig(n, f); err != nil {
+				return fmt.Errorf("error reading config file %s. %s", f, err.Error())
+			}
 		}
 	}
 
@@ -76,6 +80,13 @@ func ExeDir() string {
 		exeDir = filepath.Dir(exeDir)
 	}
 	return exeDir
+}
+
+func AddConfig(name, path string) {
+	if name == "" {
+		name = "default"
+	}
+	configpaths[name] = path
 }
 
 func ReadConfig(name, path string) error {
@@ -126,6 +137,9 @@ func SetConfig(name, key string, value interface{}) {
 
 func WriteConfig(name string) error {
 	initConfigs()
+	if name == "" {
+		name = "default"
+	}
 	config, found := configs[name]
 	if !found {
 		return fmt.Errorf("can not write config. config %s is not yet initialized", name)

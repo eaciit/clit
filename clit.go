@@ -123,7 +123,8 @@ func Config(name, key string, def interface{}) interface{} {
 	if !found {
 		return def
 	}
-	return config.GetDefault(name, def)
+	v := config.GetDefault(key, def)
+	return v
 }
 
 func SetConfig(name, key string, value interface{}) {

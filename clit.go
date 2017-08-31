@@ -54,6 +54,27 @@ func Flag(name string) string {
 func Parse() {
 	if !isParsed {
 		flag.Parse()
+		isParsed = true
+	}
+}
+
+func LoadConfigFromFlag(flagName, configName, defaultPath string) {
+	if flagName == "" {
+		flagName = "config"
+	}
+
+	if configName == "" {
+		configName = "default"
+	}
+
+	Parse()
+	if EnableConfig {
+		config := Flag(flagName)
+		if config == "" {
+			AddConfig(configName, defaultPath)
+		} else {
+			AddConfig(configName, config)
+		}
 	}
 }
 
@@ -116,6 +137,7 @@ func ReadConfig(name, path string) error {
 	if err := config.SetConfigFile(path); err != nil {
 		return err
 	}
+	fmt.Printf("Read config: %s\n", path)
 
 	configs[name] = config
 	configpaths[name] = path

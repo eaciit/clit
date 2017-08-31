@@ -24,6 +24,8 @@ var (
 	configpaths = map[string]string{}
 
 	exeDir string
+
+	isParsed = false
 )
 
 func init() {
@@ -49,9 +51,15 @@ func Flag(name string) string {
 	return *f
 }
 
-func Start() error {
+func Parse() {
+	if !isParsed {
+		flag.Parse()
+	}
+}
+
+func Commit() error {
 	var err error
-	flag.Parse()
+	Parse()
 
 	if EnableConfig {
 		for n, f := range configpaths {

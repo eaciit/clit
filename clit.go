@@ -187,6 +187,16 @@ func initConfigs() {
 	}
 }
 
+func Value(name, configgroup string, def string) string {
+	flagvalue := Flag(name)
+	if flagvalue != "" {
+		return flagvalue
+	}
+
+	cfgvalue := Config(configgroup, name, def)
+	return toolkit.ToString(cfgvalue)
+}
+
 func Close() {
 	if closeFn != nil {
 		closeFn()
